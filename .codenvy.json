@@ -1,0 +1,134 @@
+{
+  "v": "4.0",
+  "name": "odoo-tech",
+  "workspace": {
+    "environments": {
+      "wksp-ur6l": {
+        "machines": {
+          "dev-machine": {
+            "attributes": {
+              "memoryLimitBytes": "3221225472"
+            },
+            "servers": {},
+            "agents": [
+              "org.eclipse.che.exec",
+              "org.eclipse.che.terminal",
+              "org.eclipse.che.ws-agent",
+              "org.eclipse.che.ssh"
+            ]
+          }
+        },
+        "recipe": {
+          "type": "dockerfile",
+          "content": "FROM codenvy/ubuntu_python:2.7\n\n################################## Postgres SQL SETUP ###########################################\nUSER root\nRUN apt-get update && apt-get -y -q install python-software-properties software-properties-common postgresql-9.3 postgresql-client-9.3 postgresql-contrib-9.3\n\nUSER postgres\nRUN /etc/init.d/postgresql start && psql --command \"ALTER USER postgres WITH PASSWORD 'postgres';CREATE USER odoo WITH LOGIN CREATEDB;ALTER USER odoo WITH PASSWORD 'odoo';\" \n\n# Adjust PostgreSQL configuration so that remote connections to the\n# database are possible.\nUSER root\nRUN echo \"host all  all    0.0.0.0/0  md5\" >> /etc/postgresql/9.3/main/pg_hba.conf\nRUN echo \"listen_addresses='*'\" >> /etc/postgresql/9.3/main/postgresql.conf\n\n# Expose the PostgreSQL port\nEXPOSE 5432\n\nRUN mkdir -p /var/run/postgresql && chown -R postgres /var/run/postgresql\n\n# Add VOLUMEs to allow backup of config, logs and databases\nVOLUME [\"/etc/postgresql\", \"/var/log/postgresql\", \"/var/lib/postgresql\"]\n\n# Set the default command to run when starting the container\nCMD [\"/usr/lib/postgresql/9.3/bin/postgres\", \"-D\", \"/var/lib/postgresql/9.3/main\", \"-c\", \"config_file=/etc/postgresql/9.3/main/postgresql.conf\"]\n\n################################## END of Postgres SQL SETUP #######################################\n\n################################## Odoo dependencies ###############################################\nUSER root\nRUN apt-get -y -q install postgresql-server-dev-all libxml2-dev libxslt-dev libjpeg-dev libjpeg8-dev libpng-dev libldap2-dev libsasl2-dev node-less\n################################## End of Odoo dependencies ########################################\n\nUSER user\nRUN sudo apt-get update\n\n# virtualenv wrapper\nRUN mkdir ~/.virtualenv\nENV WORKON_HOME ~/.virtualenvs\nRUN sudo pip install virtualenvwrapper\nRUN echo \"export WORKON_HOME=~/.virtualenvs\"\nRUN echo \". /usr/local/bin/virtualenvwrapper.sh\" >> ~/.bashrc \n\n# working directory\nWORKDIR /projects\n\n# ports available for running django application\nEXPOSE 8069\n\n# create ssh key\nRUN rm -rf ~/ssh/id_rsa* && ssh-keygen -t rsa -f ~/.ssh/id_rsa -q -P \"\"\n\n# restarting postgres sql server \nRUN echo \"sudo service postgresql restart\" >> ~/.bashrc\n\n# user bash shell\nCMD source ~/.bashrc\nCMD tailf /dev/null\n",
+          "contentType": "text/x-dockerfile"
+        }
+      }
+    },
+    "defaultEnv": "wksp-ur6l",
+    "projects": [
+      {
+        "links": [],
+        "name": "odoo",
+        "attributes": {
+          "commands": [
+            "{\"commandLine\":\"cd /projects/odoo/ && sudo virtualenv /env && sudo pip install -r requirements.txt && ./odoo-bin --addons-path=./addons,../enterprise --db_user odoo --db_password odoo --db_host=127.0.0.1 --db-template=template0 -d gen --db-filter ^gen.*$\", \"name\":\"Start Odoo\", \"attributes\":{\"goal\":\"Run\", \"previewUrl\":\"http://${server.port.8069}\"}, \"type\":\"custom\"}"
+          ]
+        },
+        "type": "javac",
+        "source": {
+          "location": "https://github.com/odoo/odoo.git",
+          "type": "git",
+          "parameters": {}
+        },
+        "path": "/odoo",
+        "description": "odoo CE",
+        "problems": [],
+        "mixins": []
+      }
+    ],
+    "name": "odoo-training_2",
+    "commands": [
+      {
+        "commandLine": "cd /projects/odoo && sudo virtualenv /env && sudo pip install -r requirements.txt && ./odoo-bin --addons-path=./addons,../enterprise --db_user odoo --db_password odoo --db_host=127.0.0.1 --db-template=template0 -d gen --db-filter ^gen.*$",
+        "name": "Run-Odoo",
+        "attributes": {
+          "previewUrl": "${server.port.8069}"
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd /projects/odoo && sudo virtualenv /env && sudo pip install -r requirements.txt && ./odoo-bin shell --addons-path=./addons,../enterprise --db_user odoo --db_password odoo --db_host=127.0.0.1 --db-template=template0 -d gen --db-filter ^gen.*$",
+        "name": "Run-Odoo-shell",
+        "attributes": {
+          "previewUrl": ""
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd /projects/odoo && sudo virtualenv /env && sudo pip install -r requirements.txt && ./odoo-bin --addons-path=./addons,../enterprise,../technical-training/01-models --db_user odoo --db_password odoo --db_host=127.0.0.1 --db-template=template0 -d ex1 --db-filter ^ex1.*$",
+        "name": "Run-Ex1",
+        "attributes": {
+          "previewUrl": "${server.port.8069}"
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd /projects && wget https://psrunbot.odoo.com/runbot/static/technical-training.zip && unzip technical-training.zip",
+        "name": "get-training",
+        "attributes": {
+          "previewUrl": ""
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd /projects && wget https://psrunbot.odoo.com/runbot/static/enterprise.zip && unzip enterprise.zip",
+        "name": "get-enterprise",
+        "attributes": {
+          "previewUrl": ""
+        },
+        "type": "custom"
+      },
+      {
+        "commandLine": "cd /projects/odoo && sudo virtualenv /env && sudo pip install -r requirements.txt ",
+        "name": "install-dependencies",
+        "attributes": {
+          "previewUrl": ""
+        },
+        "type": "custom"
+      }
+    ],
+    "links": []
+  },
+  "id": "factoryef9y8quh76odtha5",
+  "ide": {
+    "onProjectsLoaded": {
+      "actions": [
+        {
+          "properties": {
+            "name": "get-training"
+          },
+          "id": "runCommand"
+        },
+        {
+          "properties": {
+            "name": "get-enterprise"
+          },
+          "id": "runCommand"
+        },
+        {
+          "properties": {
+            "name": "install-dependencies"
+          },
+          "id": "runCommand"
+        }
+      ]
+    }
+  },
+  "creator": {
+    "name": "lla-odoo",
+    "email": "lla@odoo.com",
+    "created": 1500451399849,
+    "userId": "userohdbjvzp48dj2g8e"
+  }
+}
