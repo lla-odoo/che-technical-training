@@ -3,6 +3,7 @@ _build/
 
 # dotfiles
 .*
+!.codenvy.json
 !.gitignore
 !.mailmap
 # compiled python files
@@ -31,4 +32,3 @@ install/win32/meta.py
 /lib/
 /man/
 /share/
-/src/

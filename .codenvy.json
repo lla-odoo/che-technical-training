@@ -45,7 +45,23 @@
         "description": "odoo CE",
         "problems": [],
         "mixins": []
-      }
+    },
+    {
+      "links": [],
+      "name": "tecfactory",
+      "attributes": {
+      },
+      "type": "javac",
+      "source": {
+        "location": "https://github.com/lla-odoo/che-technical-training.git",
+        "type": "git",
+        "parameters": {}
+      },
+      "path": "/scripts",
+      "description": "Factory And scripts",
+      "problems": [],
+      "mixins": []
+    }
     ],
     "name": "odoo-training_2",
     "commands": [
