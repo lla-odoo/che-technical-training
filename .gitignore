@@ -32,3 +32,5 @@ install/win32/meta.py
 /lib/
 /man/
 /share/
+src/
+*.db
