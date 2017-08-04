@@ -90,22 +90,6 @@
         "type": "custom"
       },
       {
-        "commandLine": "cd /projects && wget https://psrunbot.odoo.com/runbot/static/technical-training.zip && unzip technical-training.zip",
-        "name": "get-training",
-        "attributes": {
-          "previewUrl": ""
-        },
-        "type": "custom"
-      },
-      {
-        "commandLine": "cd /projects && wget https://psrunbot.odoo.com/runbot/static/enterprise.zip && unzip enterprise.zip",
-        "name": "get-enterprise",
-        "attributes": {
-          "previewUrl": ""
-        },
-        "type": "custom"
-      },
-      {
         "commandLine": "cd /projects/odoo && sudo virtualenv /env && sudo pip install -r requirements.txt ",
         "name": "install-dependencies",
         "attributes": {
