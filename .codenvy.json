@@ -1,5 +1,5 @@
 {
-  "v": "4.0",
+  "v": "4.2",
   "name": "odoo-tech",
   "workspace": {
     "environments": {
@@ -104,18 +104,6 @@
   "ide": {
     "onProjectsLoaded": {
       "actions": [
-        {
-          "properties": {
-            "name": "get-training"
-          },
-          "id": "runCommand"
-        },
-        {
-          "properties": {
-            "name": "get-enterprise"
-          },
-          "id": "runCommand"
-        },
         {
           "properties": {
             "name": "install-dependencies"
