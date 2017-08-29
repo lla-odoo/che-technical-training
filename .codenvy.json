@@ -53,7 +53,7 @@
       },
       "type": "javac",
       "source": {
-        "location": "https://github.com/lla-odoo/che-technical-training.git",
+        "location": "git@github.com:odoo/training_codenvy_factory.git",
         "type": "git",
         "parameters": {}
       },
