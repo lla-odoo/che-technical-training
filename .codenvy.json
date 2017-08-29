@@ -1,5 +1,5 @@
 {
-  "v": "4.2",
+  "v": "4.3",
   "name": "odoo-tech",
   "workspace": {
     "environments": {
@@ -53,7 +53,7 @@
       },
       "type": "javac",
       "source": {
-        "location": "git@github.com:odoo/training_codenvy_factory.git",
+        "location": "https://github.com/odoo/training_codenvy_factory.git",
         "type": "git",
         "parameters": {}
       },
